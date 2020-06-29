@@ -5,12 +5,18 @@ def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
-    compileSdkVersion 28
+
+//    buildFeatures {
+//        viewBinding true
+//    }
+
+    compileSdkVersion 30
+    buildToolsVersion "30.0.0"
 
     defaultConfig {
         applicationId "com.codepath.apps.restclienttemplate"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 30
 
         // Room schemas
         javaCompileOptions {
@@ -34,6 +40,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
 }
 
 dependencies {
