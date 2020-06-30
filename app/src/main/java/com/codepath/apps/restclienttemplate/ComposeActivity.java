@@ -12,10 +12,12 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 import okhttp3.Headers;
 
@@ -38,8 +40,11 @@ public class ComposeActivity extends AppCompatActivity {
 
         mClient = TwitterApp.getRestClient(this);
 
+        TextInputLayout mComposeTextLayout = findViewById(R.id.layoutEtCompose);
         mComposeText = findViewById(R.id.etCompose);
         mComposeButton = findViewById(R.id.btnCompose);
+
+        mComposeTextLayout.setCounterMaxLength(MAX_TWEET_LENGTH);
 
         // Set click listener on the compose button to make an API call to twitter
         mComposeButton.setOnClickListener(new View.OnClickListener() {

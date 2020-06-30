@@ -59,4 +59,5 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
+    implementation 'com.google.android.material:material:1.0.0'
 }
