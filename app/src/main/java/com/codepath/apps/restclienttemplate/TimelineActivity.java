@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,12 +34,22 @@ public class TimelineActivity extends AppCompatActivity {
     private TwitterClient mClient;
     private RecyclerView twitterRecycler;
     private TwitterAdapter twitterAdapter;
+    private SwipeRefreshLayout mSwipeTimelineLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
         mClient = TwitterApp.getRestClient(this);
+
+        mSwipeTimelineLayout = findViewById(R.id.layoutRvTimeline);
+        mSwipeTimelineLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG, "fetching new data");
+                populateHomeTimeline();
+            }
+        });
 
         twitterRecycler = findViewById(R.id.rvTimeline);
         mTweets = new ArrayList<>();
@@ -57,8 +68,10 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.i(TAG, "success populating timeline ");
                 JSONArray jsonArray = json.jsonArray;
                 try {
-                    mTweets.addAll(Tweet.fromJsonArray(jsonArray));
-                    twitterAdapter.notifyDataSetChanged();
+                    twitterAdapter.clear();
+                    twitterAdapter.addAll(Tweet.fromJsonArray(jsonArray));
+                    // Refresh is done now, so remove the loading icon
+                    mSwipeTimelineLayout.setRefreshing(false);
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception", e);
                 }

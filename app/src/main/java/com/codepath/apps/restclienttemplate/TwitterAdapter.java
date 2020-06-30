@@ -43,6 +43,18 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         return mTweets.size();
     }
 
+    // Method to clear all elements from the RecyclerView
+    public void clear() {
+        mTweets.clear();
+        notifyDataSetChanged();
+    }
+
+    // Method to add a list of items to the RecyclerView
+    public void addAll(List<Tweet> tweets) {
+        mTweets.addAll(tweets);
+        notifyDataSetChanged();
+    }
+
     public class TwitterViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mProfileImage;
