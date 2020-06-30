@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -51,7 +52,7 @@ public class TimelineActivity extends AppCompatActivity {
         mClient.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "SUCCESS: ");
+                Log.i(TAG, "success populating timeline ");
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     mTweets.addAll(Tweet.fromJsonArray(jsonArray));
@@ -78,9 +79,10 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.compose) {
-            Toast.makeText(this, "Compose", Toast.LENGTH_SHORT).show();
-            // Create navigate activity
+        if(item.getItemId() == R.id.menuCompose) {
+            // Create compose activity
+            Intent composeIntent = new Intent(this, ComposeActivity.class);
+            startActivity(composeIntent);
         }
         return true;
     }
