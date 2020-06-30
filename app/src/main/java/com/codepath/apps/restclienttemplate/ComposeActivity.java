@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,12 +15,15 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
 
     public static final int MAX_TWEET_LENGTH = 280;
+    public static final int COMPOSE_REQUEST_CODE = 67;
+
     private static final String TAG = "ComposeActivity";
 
     private TwitterClient mClient;
@@ -56,6 +60,12 @@ public class ComposeActivity extends AppCompatActivity {
                             try {
                                 Tweet tweet = Tweet.fromJson(json.jsonObject);
                                 Log.i(TAG, "Published tweet says: " + tweet.getBody());
+
+                                // Return information to timeline
+                                Intent returnToTimelineIntent = new Intent();
+                                returnToTimelineIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                                setResult(RESULT_OK, returnToTimelineIntent);
+                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

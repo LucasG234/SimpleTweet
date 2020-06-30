@@ -3,15 +3,20 @@ package com.codepath.apps.restclienttemplate.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
 public class Tweet {
 
+    // Non-private members and empty constructor for Parceler
     String body;
     String createdAt;
     User user;
+
+    public Tweet() {}
 
     private Tweet(JSONObject jsonObject) throws JSONException {
         this.body = jsonObject.getString("text");
