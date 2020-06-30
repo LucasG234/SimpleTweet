@@ -43,13 +43,8 @@ public class TimelineActivity extends AppCompatActivity {
         mClient = TwitterApp.getRestClient(this);
 
         mSwipeTimelineLayout = findViewById(R.id.layoutRvTimeline);
-        mSwipeTimelineLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Log.i(TAG, "fetching new data");
-                populateHomeTimeline();
-            }
-        });
+        configureSwipeTimelineLayout(mSwipeTimelineLayout);
+
 
         twitterRecycler = findViewById(R.id.rvTimeline);
         mTweets = new ArrayList<>();
@@ -110,5 +105,22 @@ public class TimelineActivity extends AppCompatActivity {
             twitterRecycler.smoothScrollToPosition(0);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void configureSwipeTimelineLayout(SwipeRefreshLayout mSwipeTimelineLayout) {
+        // Add the listener
+        mSwipeTimelineLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG, "fetching new data");
+                populateHomeTimeline();
+            }
+        });
+
+        // Configure the refreshing colors
+        mSwipeTimelineLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 }

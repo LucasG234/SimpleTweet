@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.util.List;
@@ -60,13 +61,14 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         private ImageView mProfileImage;
         private TextView mScreenName;
         private TextView mTweetBody;
+        private ImageView mTweetMedia;
 
         public TwitterViewHolder(@NonNull View itemView) {
             super(itemView);
             mProfileImage = itemView.findViewById(R.id.ivProfileImage);
             mScreenName = itemView.findViewById(R.id.tvScreenName);
             mTweetBody = itemView.findViewById(R.id.tvTweetBody);
-
+            mTweetMedia = itemView.findViewById(R.id.ivTweetMedia);
         }
 
         public void bind(Tweet tweet) {
@@ -74,7 +76,18 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             mScreenName.setText(tweet.getUser().getScreenName());
             Glide.with(mContext)
                     .load(tweet.getUser().getImageUrl())
+                    .transform(new CircleCrop())
                     .into(mProfileImage);
+
+            if(tweet.getMediaDisplayUrl() != null) {
+                mTweetMedia.setVisibility(View.VISIBLE);
+                Glide.with(mContext)
+                        .load(tweet.getMediaDisplayUrl())
+                        .into(mTweetMedia);
+            }
+            else {
+                mTweetMedia.setVisibility(View.GONE);
+            }
         }
     }
 }
