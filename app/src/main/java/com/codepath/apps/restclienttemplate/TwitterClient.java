@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -37,6 +38,11 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String PUBLISH_TWEET_ENDPOINT = "statuses/update.json";
 	public static final String LIKE_TWEET_ENDPOINT = "favorites/create.json";
 	public static final String UNLIKE_TWEET_ENDPOINT = "favorites/destroy.json";
+
+	// These endpoints are treated differently because IDs must be added to them
+	public static final String RETWEET_TWEET_ENDPOINT = "statuses/retweet/";
+	public static final String UNRETWEET_TWEET_ENDPOINT = "statuses/unretweet/";
+
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_INSTANCE,
@@ -84,17 +90,18 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void likeUnlikeTweet(long tweetId, boolean like, JsonHttpResponseHandler handler) {
-		String apiUrl;
-		if(like) {
-			apiUrl = getApiUrl(LIKE_TWEET_ENDPOINT);
-		}
-		else {
-			apiUrl = getApiUrl(UNLIKE_TWEET_ENDPOINT);
-		}
+		String apiUrl = like ? getApiUrl(LIKE_TWEET_ENDPOINT) : getApiUrl(UNLIKE_TWEET_ENDPOINT);
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("id", tweetId);
 		client.post(apiUrl, params, "", handler);
+	}
+
+	public void retweetUnretweetTweet(long tweetId, boolean retweet, JsonHttpResponseHandler handler) {
+		String apiUrl = retweet ? getApiUrl(RETWEET_TWEET_ENDPOINT): getApiUrl(UNRETWEET_TWEET_ENDPOINT);
+		apiUrl = apiUrl.concat(tweetId + ".json");
+		Log.i("TwitterClient", "Retweeting at: " + apiUrl);
+		client.post(apiUrl, new RequestParams(), "", handler);
 	}
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint

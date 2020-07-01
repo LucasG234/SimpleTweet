@@ -145,6 +145,24 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
 
                 }
             });
+
+            retweetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mClient.retweetUnretweetTweet(tweet.getId(), !tweet.isRetweeted(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "[un]retweet successful");
+                            tweet.setRetweeted(!tweet.isRetweeted());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.d(TAG, "[un]retweet failed: " + response, throwable);
+                        }
+                    });
+                }
+            });
         }
     }
 
