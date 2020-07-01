@@ -73,14 +73,10 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
     public class TwitterViewHolder extends RecyclerView.ViewHolder {
 
         private ItemTweetBinding tweetBinding;
-        private boolean mTweetLiked;
-        private boolean mTweetRetweeted;
 
         public TwitterViewHolder(@NonNull ItemTweetBinding binding) {
             super(binding.getRoot());
             tweetBinding = binding;
-            mTweetLiked = false;
-            mTweetRetweeted = false;
         }
 
         public void bind(Tweet tweet) {
@@ -128,26 +124,28 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!mTweetLiked) {
-                        mClient.likeTweet(tweet.getId(), new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                                Log.i(TAG, "successfully liked tweet");
-                                mTweetLiked = true;
-                                Glide.with(mParentView)
-                                        .load(R.drawable.ic_vector_heart)
-                                        .into(likeButton);
-                            }
+                    mClient.likeUnlikeTweet(tweet.getId(), !tweet.isLiked(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            int newPhotoId = tweet.isLiked() ? R.drawable.ic_vector_heart_stroke : R.drawable.ic_vector_heart;
+                            Log.i(TAG, "successfully [un]liked tweet");
+                            tweet.setLiked(!tweet.isLiked());
+                            Glide.with(mParentView)
+                                    .load(newPhotoId)
+                                    .into(likeButton);
+                        }
 
-                            @Override
-                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                                Toast.makeText(mParentView, mParentView.getString(R.string.like_faliure), Toast.LENGTH_SHORT).show();
-                                Log.e(TAG, "failure to like tweet: " + response, throwable);
-                            }
-                        });
-                    }
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            String toastText = tweet.isLiked() ? mParentView.getString(R.string.like_failure) : mParentView.getString(R.string.unlike_failure);
+                            Toast.makeText(mParentView, toastText, Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, "failure to [un]like tweet: " + response, throwable);
+                        }
+                    });
+
                 }
             });
         }
     }
+
 }

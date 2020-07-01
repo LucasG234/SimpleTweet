@@ -28,6 +28,8 @@ public class Tweet {
     String body;
     String createdAt;
     long id;
+    boolean liked;
+    boolean retweeted;
     //TODO: display multiple images
     String mediaDisplayUrl;
     User user;
@@ -35,6 +37,9 @@ public class Tweet {
     public Tweet() {}
 
     private Tweet(JSONObject jsonObject) throws JSONException {
+        this.liked = false;
+        this.retweeted = false;
+
         this.body = jsonObject.getString(BODY_KEY);
         this.createdAt = jsonObject.getString(CREATED_AT_KEY);
         this.id = jsonObject.getLong(ID_KEY);
@@ -80,5 +85,21 @@ public class Tweet {
 
     public long getId() {
         return id;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public boolean isRetweeted() {
+        return retweeted;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
     }
 }
