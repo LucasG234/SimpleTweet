@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -35,20 +36,20 @@ public class TimelineActivity extends AppCompatActivity {
     private RecyclerView twitterRecycler;
     private TwitterAdapter twitterAdapter;
     private SwipeRefreshLayout mSwipeTimelineLayout;
-    private EndlessRecyclerViewScrollListener mScrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+        ActivityTimelineBinding timelineBinding = ActivityTimelineBinding.inflate(getLayoutInflater());
+        setContentView(timelineBinding.getRoot());
 
         mClient = TwitterApp.getRestClient(this);
 
-        mSwipeTimelineLayout = findViewById(R.id.layoutRvTimeline);
+        mSwipeTimelineLayout = timelineBinding.layoutRvTimeline;
         configureSwipeTimelineLayout(mSwipeTimelineLayout);
 
 
-        twitterRecycler = findViewById(R.id.rvTimeline);
+        twitterRecycler = timelineBinding.rvTimeline;
         mTweets = new ArrayList<>();
         twitterAdapter = new TwitterAdapter(this, mTweets);
 
@@ -56,13 +57,13 @@ public class TimelineActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         twitterRecycler.setLayoutManager(linearLayoutManager);
 
-        mScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 loadMoreData();
             }
         };
-        twitterRecycler.addOnScrollListener(mScrollListener);
+        twitterRecycler.addOnScrollListener(scrollListener);
 
         populateHomeTimeline();
     }

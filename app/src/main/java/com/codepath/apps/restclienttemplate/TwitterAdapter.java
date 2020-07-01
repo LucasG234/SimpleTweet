@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.util.List;
@@ -29,8 +30,8 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
     @NonNull
     @Override
     public TwitterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_tweet, parent, false);
-        return new TwitterViewHolder(view);
+        ItemTweetBinding tweetBinding = ItemTweetBinding.inflate(LayoutInflater.from(mContext), parent, false);
+        return new TwitterViewHolder(tweetBinding);
     }
 
     @Override
@@ -63,12 +64,12 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         private TextView mTweetBody;
         private ImageView mTweetMedia;
 
-        public TwitterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mProfileImage = itemView.findViewById(R.id.ivProfileImage);
-            mScreenName = itemView.findViewById(R.id.tvScreenName);
-            mTweetBody = itemView.findViewById(R.id.tvTweetBody);
-            mTweetMedia = itemView.findViewById(R.id.ivTweetMedia);
+        public TwitterViewHolder(@NonNull ItemTweetBinding binding) {
+            super(binding.getRoot());
+            mProfileImage = binding.ivProfileImage;
+            mScreenName = binding.tvScreenName;
+            mTweetBody = binding.tvTweetBody;
+            mTweetMedia = binding.ivTweetMedia;
         }
 
         public void bind(Tweet tweet) {
