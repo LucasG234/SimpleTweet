@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,36 +60,41 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
 
     public class TwitterViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mProfileImage;
-        private TextView mScreenName;
-        private TextView mTweetBody;
-        private ImageView mTweetMedia;
+        private ItemTweetBinding tweetBinding;
 
         public TwitterViewHolder(@NonNull ItemTweetBinding binding) {
             super(binding.getRoot());
-            mProfileImage = binding.ivProfileImage;
-            mScreenName = binding.tvScreenName;
-            mTweetBody = binding.tvTweetBody;
-            mTweetMedia = binding.ivTweetMedia;
+            tweetBinding = binding;
         }
 
         public void bind(Tweet tweet) {
-            mTweetBody.setText(tweet.getBody());
-            mScreenName.setText(tweet.getUser().getScreenName());
+            tweetBinding.tvTweetBody.setText(tweet.getBody());
+            tweetBinding.tvScreenName.setText(tweet.getUser().getScreenName());
             Glide.with(mContext)
                     .load(tweet.getUser().getImageUrl())
                     .transform(new CircleCrop())
-                    .into(mProfileImage);
+                    .into(tweetBinding.ivProfileImage);
 
+            setTweetMedia(tweetBinding.ivTweetMedia, tweet);
+            configureButtons(tweetBinding, tweet);
+        }
+
+        private void setTweetMedia(ImageView tweetMedia, Tweet tweet) {
             if(tweet.getMediaDisplayUrl() != null) {
-                mTweetMedia.setVisibility(View.VISIBLE);
+                tweetMedia.setVisibility(View.VISIBLE);
                 Glide.with(mContext)
                         .load(tweet.getMediaDisplayUrl())
-                        .into(mTweetMedia);
+                        .into(tweetMedia);
             }
             else {
-                mTweetMedia.setVisibility(View.GONE);
+                tweetMedia.setVisibility(View.GONE);
             }
+        }
+
+        private void configureButtons(ItemTweetBinding tweetBinding, Tweet tweet) {
+            Button likeButton = tweetBinding.btnLike;
+            Button replyButton = tweetBinding.btnReply;
+            Button retweetButton = tweetBinding.btnRetweet;
         }
     }
 }
