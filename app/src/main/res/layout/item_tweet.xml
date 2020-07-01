@@ -46,32 +46,32 @@
         app:layout_constraintVertical_bias="0.0"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <Button
-        android:id="@+id/btnReply"
+    <ImageView
+        android:id="@+id/ivReply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="Reply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia" />
+        app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia"
+        app:srcCompat="@drawable/ic_vector_compose" />
 
-    <Button
-        android:id="@+id/btnLike"
+    <ImageView
+        android:id="@+id/ivLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Like"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia" />
+        app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia"
+        app:srcCompat="@drawable/ic_vector_heart_stroke" />
 
-    <Button
-        android:id="@+id/btnRetweet"
+    <ImageView
+        android:id="@+id/ivRetweet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Retweet"
-        app:layout_constraintEnd_toStartOf="@+id/btnLike"
-        app:layout_constraintStart_toEndOf="@+id/btnReply"
-        app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia" />
+        app:layout_constraintEnd_toStartOf="@+id/ivLike"
+        app:layout_constraintStart_toEndOf="@+id/ivReply"
+        app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia"
+        app:srcCompat="@drawable/ic_vector_retweet" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

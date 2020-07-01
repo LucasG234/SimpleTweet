@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,7 +76,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
 
         public void bind(Tweet tweet) {
             tweetBinding.tvTweetBody.setText(tweet.getBody());
-            tweetBinding.tvScreenName.setText(tweet.getUser().getScreenName());
+            tweetBinding.tvScreenName.setText("@" + tweet.getUser().getScreenName());
             Glide.with(mParentView)
                     .load(tweet.getUser().getImageUrl())
                     .transform(new CircleCrop())
@@ -97,9 +99,10 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         }
 
         private void configureButtons(ItemTweetBinding tweetBinding, final Tweet tweet) {
-            Button likeButton = tweetBinding.btnLike;
-            Button replyButton = tweetBinding.btnReply;
-            Button retweetButton = tweetBinding.btnRetweet;
+            //TODO= change names
+            ImageView likeButton = tweetBinding.ivLike;
+            ImageView replyButton = tweetBinding.ivReply;
+            ImageView retweetButton = tweetBinding.ivRetweet;
 
             replyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -110,6 +113,13 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
                     // Put the parent tweet into the Intent to be used
                     replyIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
                     mParentView.startActivityForResult(replyIntent, ReplyActivity.REPLY_REQUEST_CODE);
+                }
+            });
+
+            likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
                 }
             });
         }

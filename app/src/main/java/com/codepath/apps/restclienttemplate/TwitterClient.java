@@ -35,6 +35,8 @@ public class TwitterClient extends OAuthBaseClient {
 	// List of endpoints defined here
 	public static final String HOME_TIMELINE_ENDPOINT = "statuses/home_timeline.json";
 	public static final String PUBLISH_TWEET_ENDPOINT = "statuses/update.json";
+	public static final String LIKE_TWEET_ENDPOINT = "favorites/create.json";
+	public static final String UNLIKE_TWEET_ENDPOINT = "favorites/destroy.json";
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_INSTANCE,
@@ -72,12 +74,28 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, "", handler);
 	}
 
-	public void publishReply(String tweetText, Long replyId, JsonHttpResponseHandler handler) {
+	public void publishReply(String tweetText, long tweetId, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl(PUBLISH_TWEET_ENDPOINT);
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("in_reply_to_status_id", replyId);
+		params.put("in_reply_to_status_id", tweetId);
 		params.put("status", tweetText);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void likeTweet(long tweetId, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl(LIKE_TWEET_ENDPOINT);
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("id", tweetId);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void unlikeTweet(long tweetId, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl(UNLIKE_TWEET_ENDPOINT);
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("id", tweetId);
 		client.post(apiUrl, params, "", handler);
 	}
 
