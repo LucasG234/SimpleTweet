@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,45 +8,55 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
+import com.codepath.apps.restclienttemplate.databinding.ActivityReplyBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import okhttp3.Headers;
 
-public class ComposeActivity extends AppCompatActivity {
+public class ReplyActivity extends AppCompatActivity {
 
     public static final int MAX_TWEET_LENGTH = 280;
-    public static final int COMPOSE_REQUEST_CODE = 67;
+    public static final int REPLY_REQUEST_CODE = 68;
 
     private static final String TAG = "ComposeActivity";
 
     private TwitterClient mClient;
 
     private EditText mComposeText;
+    private TextView mReplyName;
     private Button mComposeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityComposeBinding composeBinding = ActivityComposeBinding.inflate(getLayoutInflater());
-        setContentView(composeBinding.getRoot());
+        ActivityReplyBinding replyBinding = ActivityReplyBinding.inflate(getLayoutInflater());
+        setContentView(replyBinding.getRoot());
 
         mClient = TwitterApp.getRestClient(this);
 
-        TextInputLayout mComposeTextLayout = composeBinding.layoutEtCompose;
-        mComposeText = composeBinding.etCompose;
-        mComposeButton = composeBinding.btnCompose;
+        TextInputLayout mComposeTextLayout = replyBinding.layoutEtCompose;
+        mComposeText = replyBinding.etCompose;
+        mComposeButton = replyBinding.btnCompose;
+        mReplyName = replyBinding.tvReplyName;
 
         mComposeTextLayout.setCounterMaxLength(MAX_TWEET_LENGTH);
+
+        Tweet parentTweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
+        final Long replyId = parentTweet.getId();
+
+        mReplyName.setText(getString(R.string.reply_name) + parentTweet.getUser().getScreenName());
 
         // Set click listener on the compose button to make an API call to twitter
         mComposeButton.setOnClickListener(new View.OnClickListener() {
@@ -54,13 +64,13 @@ public class ComposeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String tweetText = mComposeText.getText().toString();
                 if(tweetText.length() == 0) {
-                    Toast.makeText(ComposeActivity.this, getString(R.string.compose_error_empty), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ReplyActivity.this, getString(R.string.compose_error_empty), Toast.LENGTH_SHORT).show();
                 }
                 else if(tweetText.length() > MAX_TWEET_LENGTH) {
-                    Toast.makeText(ComposeActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ReplyActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    mClient.publishTweet(tweetText, new JsonHttpResponseHandler() {
+                    mClient.publishReply(tweetText, replyId, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
                             Log.i(TAG, "success publishing tweet");
