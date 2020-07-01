@@ -8,9 +8,9 @@ import org.parceler.Parcel;
 public class User {
 
     // Keys from Twitter response JSON
-    public static final String NAME_KEY = "name";
-    public static final String SCREEN_NAME_KEY = "screen_name";
-    public static final String IMAGE_URL_KEY = "profile_image_url_https";
+    private static final String NAME_KEY = "name";
+    private static final String SCREEN_NAME_KEY = "screen_name";
+    private static final String IMAGE_URL_KEY = "profile_image_url_https";
 
     // Non-private members and empty constructor for Parceler
     String name;

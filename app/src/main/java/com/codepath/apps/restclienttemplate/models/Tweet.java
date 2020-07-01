@@ -14,18 +14,20 @@ import java.util.List;
 public class Tweet {
 
     // Keys from Twitter response JSON
-    public static final String BODY_KEY = "text";
-    public static final String CREATED_AT_KEY = "created_at";
-    public static final String USER_KEY = "user";
-    public static final String ENTITIES_OBJECT_KEY = "entities";
-    public static final String MEDIA_ARRAY_KEY = "media";
-    public static final String MEDIA_DISPLAY_URL_KEY = "media_url_https";
+    private static final String BODY_KEY = "text";
+    private static final String CREATED_AT_KEY = "created_at";
+    private static final String ID_KEY = "id";
+    private static final String USER_KEY = "user";
+    private static final String ENTITIES_OBJECT_KEY = "entities";
+    private static final String MEDIA_ARRAY_KEY = "media";
+    private static final String MEDIA_DISPLAY_URL_KEY = "media_url_https";
 
     private static final String TAG = "Tweet";
 
     // Non-private members and empty constructor for Parceler
     String body;
     String createdAt;
+    long id;
     //TODO: display multiple images
     String mediaDisplayUrl;
     User user;
@@ -35,8 +37,10 @@ public class Tweet {
     private Tweet(JSONObject jsonObject) throws JSONException {
         this.body = jsonObject.getString(BODY_KEY);
         this.createdAt = jsonObject.getString(CREATED_AT_KEY);
+        this.id = jsonObject.getLong(ID_KEY);
         this.user = User.fromJson(jsonObject.getJSONObject(USER_KEY));
-        mediaDisplayUrl = null;
+
+        this.mediaDisplayUrl = null;
         JSONObject entities = jsonObject.getJSONObject(ENTITIES_OBJECT_KEY);
         // If the object has the media array and its not null, store it to be rendered
         if(entities.has("media")) {
@@ -72,5 +76,9 @@ public class Tweet {
 
     public String getMediaDisplayUrl() {
         return mediaDisplayUrl;
+    }
+
+    public long getId() {
+        return id;
     }
 }

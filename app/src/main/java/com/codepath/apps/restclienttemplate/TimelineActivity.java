@@ -35,11 +35,13 @@ public class TimelineActivity extends AppCompatActivity {
     private RecyclerView twitterRecycler;
     private TwitterAdapter twitterAdapter;
     private SwipeRefreshLayout mSwipeTimelineLayout;
+    private EndlessRecyclerViewScrollListener mScrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
         mClient = TwitterApp.getRestClient(this);
 
         mSwipeTimelineLayout = findViewById(R.id.layoutRvTimeline);
@@ -51,7 +53,16 @@ public class TimelineActivity extends AppCompatActivity {
         twitterAdapter = new TwitterAdapter(this, mTweets);
 
         twitterRecycler.setAdapter(twitterAdapter);
-        twitterRecycler.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        twitterRecycler.setLayoutManager(linearLayoutManager);
+
+        mScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadMoreData();
+            }
+        };
+        twitterRecycler.addOnScrollListener(mScrollListener);
 
         populateHomeTimeline();
     }
@@ -63,12 +74,13 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.i(TAG, "success populating timeline ");
                 JSONArray jsonArray = json.jsonArray;
                 try {
+                    // Clear out the page (if it already had anything) and refresh it
                     twitterAdapter.clear();
                     twitterAdapter.addAll(Tweet.fromJsonArray(jsonArray));
                     // Refresh is done now, so remove the loading icon
                     mSwipeTimelineLayout.setRefreshing(false);
                 } catch (JSONException e) {
-                    Log.e(TAG, "Json exception", e);
+                    Log.e(TAG, "Json exception on population", e);
                 }
             }
 
@@ -77,6 +89,29 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.e(TAG, "FAILURE: " + response, throwable);
             }
         });
+    }
+
+    private void loadMoreData() {
+        // Give getNextPageofTweets the ID of the oldest tweet
+        mClient.getNextPageOfTweets(mTweets.get(mTweets.size()-1).getId(),
+                new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Log.i(TAG, "success on loadmoredata");
+
+                        JSONArray jsonArray = json.jsonArray;
+                        try {
+                            twitterAdapter.addAll(Tweet.fromJsonArray(jsonArray));
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Json exception on loadmoredata", e);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        Log.e(TAG, "onFailure for loadMoreData: " + response, throwable);
+                    }
+                });
     }
 
     @Override
