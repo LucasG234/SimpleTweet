@@ -55,7 +55,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         twitterRecycler = timelineBinding.rvTimeline;
         mTweets = new ArrayList<>();
-        twitterAdapter = new TwitterAdapter(this, mTweets);
+        twitterAdapter = new TwitterAdapter(this, mClient, mTweets);
 
         twitterRecycler.setAdapter(twitterAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

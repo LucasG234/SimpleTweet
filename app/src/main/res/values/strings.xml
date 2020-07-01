@@ -15,4 +15,6 @@
 
     <string name="reply_name">Replying to @</string>
 
+    <string name="like_faliure">Failed to like tweet</string>
+
 </resources>

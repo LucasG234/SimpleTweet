@@ -1,37 +1,42 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.codepath.apps.restclienttemplate.activities.ComposeActivity;
 import com.codepath.apps.restclienttemplate.activities.ReplyActivity;
 import com.codepath.apps.restclienttemplate.activities.TimelineActivity;
 import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
+import okhttp3.Headers;
+
 public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterViewHolder> {
+
+    private static final String TAG = "TwitterAdapter";
 
     // TimelineActivty is the only context allowed for this class
     private TimelineActivity mParentView;
+    private TwitterClient mClient;
     private List<Tweet> mTweets;
 
-    public TwitterAdapter(TimelineActivity context, List<Tweet> tweets) {
+    public TwitterAdapter(TimelineActivity context, TwitterClient client, List<Tweet> tweets) {
         this.mParentView = context;
+        this.mClient = client;
         this.mTweets = tweets;
     }
 
@@ -68,10 +73,14 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
     public class TwitterViewHolder extends RecyclerView.ViewHolder {
 
         private ItemTweetBinding tweetBinding;
+        private boolean mTweetLiked;
+        private boolean mTweetRetweeted;
 
         public TwitterViewHolder(@NonNull ItemTweetBinding binding) {
             super(binding.getRoot());
             tweetBinding = binding;
+            mTweetLiked = false;
+            mTweetRetweeted = false;
         }
 
         public void bind(Tweet tweet) {
@@ -100,9 +109,9 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
 
         private void configureButtons(ItemTweetBinding tweetBinding, final Tweet tweet) {
             //TODO= change names
-            ImageView likeButton = tweetBinding.ivLike;
-            ImageView replyButton = tweetBinding.ivReply;
-            ImageView retweetButton = tweetBinding.ivRetweet;
+            final ImageView likeButton = tweetBinding.ivLike;
+            final ImageView replyButton = tweetBinding.ivReply;
+            final ImageView retweetButton = tweetBinding.ivRetweet;
 
             replyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,7 +128,24 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(!mTweetLiked) {
+                        mClient.likeTweet(tweet.getId(), new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i(TAG, "successfully liked tweet");
+                                mTweetLiked = true;
+                                Glide.with(mParentView)
+                                        .load(R.drawable.ic_vector_heart)
+                                        .into(likeButton);
+                            }
 
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Toast.makeText(mParentView, mParentView.getString(R.string.like_faliure), Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "failure to like tweet: " + response, throwable);
+                            }
+                        });
+                    }
                 }
             });
         }
