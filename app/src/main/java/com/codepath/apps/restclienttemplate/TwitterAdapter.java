@@ -86,6 +86,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         public void bind(Tweet tweet) {
             tweetBinding.tvTweetBody.setText(tweet.getBody());
             tweetBinding.tvScreenName.setText("@" + tweet.getUser().getScreenName());
+            tweetBinding.tvTweetName.setText(tweet.getUser().getName());
             Glide.with(mParentView)
                     .load(tweet.getUser().getImageUrl())
                     .transform(new CircleCrop())
@@ -138,7 +139,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mClient.likeUnlikeTweet(tweet.getId(), !tweet.isLiked(), new LikeButtonJsonResponseHandler(mParentView, tweet, likeButton));
+                    mClient.likeUnlikeTweet(tweet.getId(), !tweet.isLiked(), new LikeButtonJsonResponseHandler(tweet, likeButton));
 
                 }
             });
@@ -146,34 +147,17 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             retweetButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mClient.retweetUnretweetTweet(tweet.getId(), !tweet.isRetweeted(), new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Headers headers, JSON json) {
-                            Log.i(TAG, "[un]retweet successful");
-                            // Change the retweet button visually: switch tinting
-                            int colorToSet = tweet.isRetweeted() ?
-                                    ContextCompat.getColor(mParentView, R.color.light_gray) : ContextCompat.getColor(mParentView, R.color.medium_green);
-                            ImageViewCompat.setImageTintList(retweetButton, ColorStateList.valueOf(colorToSet));
-                            tweet.setRetweeted(!tweet.isRetweeted());
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                            Log.d(TAG, "[un]retweet failed: " + response, throwable);
-                        }
-                    });
+                    mClient.retweetUnretweetTweet(tweet.getId(), !tweet.isRetweeted(), new RetweetButtonJsonResponseHandler(tweet, retweetButton));
                 }
             });
         }
     }
 
     class LikeButtonJsonResponseHandler extends JsonHttpResponseHandler{
-        private TimelineActivity mParentView;
         private Tweet mTweet;
         private ImageView mLikeButton;
 
-        public LikeButtonJsonResponseHandler(TimelineActivity parentView, Tweet tweet, ImageView likeButton) {
-            this.mParentView = parentView;
+        public LikeButtonJsonResponseHandler(Tweet tweet, ImageView likeButton) {
             this.mTweet = tweet;
             this.mLikeButton = likeButton;
         }
@@ -196,6 +180,31 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         @Override
         public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
             Log.e(TAG, "failure to [un]like tweet: " + response, throwable);
+        }
+    }
+
+    class RetweetButtonJsonResponseHandler extends JsonHttpResponseHandler{
+        private Tweet mTweet;
+        private ImageView mRetweetButton;
+
+        public RetweetButtonJsonResponseHandler(Tweet tweet, ImageView retweetButton) {
+            this.mTweet = tweet;
+            this.mRetweetButton = retweetButton;
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Headers headers, JSON json) {
+            Log.i(TAG, "[un]retweet successful");
+            // Change the retweet button visually: switch tinting
+            int colorToSet = mTweet.isRetweeted() ?
+                    ContextCompat.getColor(mParentView, R.color.light_gray) : ContextCompat.getColor(mParentView, R.color.medium_green);
+            ImageViewCompat.setImageTintList(mRetweetButton, ColorStateList.valueOf(colorToSet));
+            mTweet.setRetweeted(!mTweet.isRetweeted());
+        }
+
+        @Override
+        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+            Log.d(TAG, "[un]retweet failed: " + response, throwable);
         }
     }
 }
