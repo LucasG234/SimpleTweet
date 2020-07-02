@@ -112,6 +112,17 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             final ImageView replyButton = tweetBinding.ivReply;
             final ImageView retweetButton = tweetBinding.ivRetweet;
 
+            // Change look of like and retweet buttons initially if the tweet is already either
+            if(tweet.isLiked()) {
+                Glide.with(mParentView)
+                        .load(R.drawable.ic_vector_heart)
+                        .into(likeButton);
+                ImageViewCompat.setImageTintList(likeButton, ColorStateList.valueOf(ContextCompat.getColor(mParentView, R.color.medium_red)));
+            }
+            if(tweet.isRetweeted()) {
+                ImageViewCompat.setImageTintList(retweetButton, ColorStateList.valueOf(ContextCompat.getColor(mParentView, R.color.medium_green)));
+            }
+            // Set onClickListeners for all 3 buttons
             replyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

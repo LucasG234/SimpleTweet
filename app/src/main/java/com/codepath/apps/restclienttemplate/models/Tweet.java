@@ -28,6 +28,8 @@ public class Tweet {
     private static final String ENTITIES_OBJECT_KEY = "entities";
     private static final String MEDIA_ARRAY_KEY = "media";
     private static final String MEDIA_DISPLAY_URL_KEY = "media_url_https";
+    private static final String LIKED_KEY = "favorited";
+    private static final String RETWEETED_KEY = "retweeted";
 
     private static final String TAG = "Tweet";
 
@@ -59,6 +61,8 @@ public class Tweet {
         this.body = jsonObject.getString(BODY_KEY);
         this.createdAt = jsonObject.getString(CREATED_AT_KEY);
         this.id = jsonObject.getLong(ID_KEY);
+        this.liked = jsonObject.getBoolean(LIKED_KEY);
+        this.retweeted = jsonObject.getBoolean(RETWEETED_KEY);
         this.user = User.fromJson(jsonObject.getJSONObject(USER_KEY));
         this.userId = user.getId();
 
