@@ -5,6 +5,7 @@
     <string name="login_label">Log in</string>
     <string name="timeline_label">Your Timeline</string>
     <string name="compose_label">Compose a Tweet</string>
+    <string name="reply_label">Reply to a Tweet</string>
     <string name="intent_scheme">oauth</string>
     <string name="intent_host">cprest</string>
 
