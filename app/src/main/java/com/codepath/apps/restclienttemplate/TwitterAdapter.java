@@ -1,6 +1,8 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -128,10 +132,15 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
                             int newPhotoId = tweet.isLiked() ? R.drawable.ic_vector_heart_stroke : R.drawable.ic_vector_heart;
                             Log.i(TAG, "successfully [un]liked tweet");
-                            tweet.setLiked(!tweet.isLiked());
+                            // Change the like button visually: switch tinting and image
                             Glide.with(mParentView)
                                     .load(newPhotoId)
                                     .into(likeButton);
+                            int colorToSet = tweet.isLiked() ?
+                                    ContextCompat.getColor(mParentView, R.color.light_gray) : ContextCompat.getColor(mParentView, R.color.medium_red);
+                            ImageViewCompat.setImageTintList(likeButton, ColorStateList.valueOf(colorToSet));
+
+                            tweet.setLiked(!tweet.isLiked());
                         }
 
                         @Override
@@ -152,6 +161,10 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
                         @Override
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
                             Log.i(TAG, "[un]retweet successful");
+                            // Change the retweet button visually: switch tinting
+                            int colorToSet = tweet.isRetweeted() ?
+                                    ContextCompat.getColor(mParentView, R.color.light_gray) : ContextCompat.getColor(mParentView, R.color.medium_green);
+                            ImageViewCompat.setImageTintList(retweetButton, ColorStateList.valueOf(colorToSet));
                             tweet.setRetweeted(!tweet.isRetweeted());
                         }
 

@@ -50,17 +50,19 @@
         android:id="@+id/ivReply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="@color/light_gray"
         android:layout_marginStart="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
         app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia"
-        app:srcCompat="@drawable/ic_vector_compose" />
+        app:srcCompat="@drawable/ic_baseline_reply_24" />
 
     <ImageView
         android:id="@+id/ivLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="@color/light_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia"
         app:srcCompat="@drawable/ic_vector_heart_stroke" />
@@ -69,6 +71,7 @@
         android:id="@+id/ivRetweet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="@color/light_gray"
         app:layout_constraintEnd_toStartOf="@+id/ivLike"
         app:layout_constraintStart_toEndOf="@+id/ivReply"
         app:layout_constraintTop_toBottomOf="@+id/ivTweetMedia"
