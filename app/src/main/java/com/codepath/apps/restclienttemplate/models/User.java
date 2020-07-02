@@ -25,11 +25,13 @@ public class User {
     @ColumnInfo
     @PrimaryKey
     long id;
+    @ColumnInfo
     String name;
     @ColumnInfo
     String screenName;
     @ColumnInfo
     String imageUrl;
+
 
     public User() {}
 

@@ -138,29 +138,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mClient.likeUnlikeTweet(tweet.getId(), !tweet.isLiked(), new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Headers headers, JSON json) {
-                            int newPhotoId = tweet.isLiked() ? R.drawable.ic_vector_heart_stroke : R.drawable.ic_vector_heart;
-                            Log.i(TAG, "successfully [un]liked tweet");
-                            // Change the like button visually: switch tinting and image
-                            Glide.with(mParentView)
-                                    .load(newPhotoId)
-                                    .into(likeButton);
-                            int colorToSet = tweet.isLiked() ?
-                                    ContextCompat.getColor(mParentView, R.color.light_gray) : ContextCompat.getColor(mParentView, R.color.medium_red);
-                            ImageViewCompat.setImageTintList(likeButton, ColorStateList.valueOf(colorToSet));
-
-                            tweet.setLiked(!tweet.isLiked());
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                            String toastText = tweet.isLiked() ? mParentView.getString(R.string.like_failure) : mParentView.getString(R.string.unlike_failure);
-                            Toast.makeText(mParentView, toastText, Toast.LENGTH_SHORT).show();
-                            Log.e(TAG, "failure to [un]like tweet: " + response, throwable);
-                        }
-                    });
+                    mClient.likeUnlikeTweet(tweet.getId(), !tweet.isLiked(), new LikeButtonJsonResponseHandler(mParentView, tweet, likeButton));
 
                 }
             });
@@ -189,4 +167,35 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         }
     }
 
+    class LikeButtonJsonResponseHandler extends JsonHttpResponseHandler{
+        private TimelineActivity mParentView;
+        private Tweet mTweet;
+        private ImageView mLikeButton;
+
+        public LikeButtonJsonResponseHandler(TimelineActivity parentView, Tweet tweet, ImageView likeButton) {
+            this.mParentView = parentView;
+            this.mTweet = tweet;
+            this.mLikeButton = likeButton;
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Headers headers, JSON json) {
+            int newPhotoId = mTweet.isLiked() ? R.drawable.ic_vector_heart_stroke : R.drawable.ic_vector_heart;
+            Log.i(TAG, "successfully [un]liked tweet");
+            // Change the like button visually: switch tinting and image
+            Glide.with(mParentView)
+                    .load(newPhotoId)
+                    .into(mLikeButton);
+            int colorToSet = mTweet.isLiked() ?
+                    ContextCompat.getColor(mParentView, R.color.light_gray) : ContextCompat.getColor(mParentView, R.color.medium_red);
+            ImageViewCompat.setImageTintList(mLikeButton, ColorStateList.valueOf(colorToSet));
+
+            mTweet.setLiked(!mTweet.isLiked());
+        }
+
+        @Override
+        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+            Log.e(TAG, "failure to [un]like tweet: " + response, throwable);
+        }
+    }
 }

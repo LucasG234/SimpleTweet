@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.activities;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -42,6 +43,9 @@ public class ComposeActivity extends AppCompatActivity {
         setContentView(composeBinding.getRoot());
 
         mClient = TwitterApp.getRestClient(this);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(getString(R.string.compose_label));
 
         TextInputLayout mComposeTextLayout = composeBinding.layoutEtCompose;
         mComposeText = composeBinding.etCompose;

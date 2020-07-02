@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
@@ -60,6 +61,8 @@ public class TimelineActivity extends AppCompatActivity {
         mClient = TwitterApp.getRestClient(this);
         mTweetDao = ((TwitterApp) getApplicationContext()).getMyDatabase().tweetDao();
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(getString(R.string.timeline_label));
 
         mSwipeTimelineLayout = timelineBinding.layoutRvTimeline;
         configureSwipeTimelineLayout(mSwipeTimelineLayout);
