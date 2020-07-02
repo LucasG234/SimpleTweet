@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
-import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.databinding.ActivityReplyBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -36,8 +35,6 @@ public class ReplyActivity extends AppCompatActivity {
     private TwitterClient mClient;
 
     private EditText mComposeText;
-    private TextView mReplyName;
-    private Button mComposeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +49,8 @@ public class ReplyActivity extends AppCompatActivity {
 
         TextInputLayout mComposeTextLayout = replyBinding.layoutEtCompose;
         mComposeText = replyBinding.etCompose;
-        mComposeButton = replyBinding.btnCompose;
-        mReplyName = replyBinding.tvReplyName;
+        Button mComposeButton = replyBinding.btnCompose;
+        TextView mReplyName = replyBinding.tvReplyName;
 
         mComposeTextLayout.setCounterMaxLength(MAX_TWEET_LENGTH);
 
@@ -74,31 +71,33 @@ public class ReplyActivity extends AppCompatActivity {
                     Toast.makeText(ReplyActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    mClient.publishReply(tweetText, replyId, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Headers headers, JSON json) {
-                            Log.i(TAG, "success publishing tweet");
-                            try {
-                                Tweet tweet = Tweet.fromJson(json.jsonObject);
-                                Log.i(TAG, "Published tweet says: " + tweet.getBody());
-
-                                // Return information to timeline
-                                Intent returnToTimelineIntent = new Intent();
-                                returnToTimelineIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-                                setResult(RESULT_OK, returnToTimelineIntent);
-                                finish();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                            Log.e(TAG, "FAILURE: " + response, throwable);
-                        }
-                    });
+                    mClient.publishReply(tweetText, replyId, new ReplyButtonJsonHttpResponseHandler());
                 }
             }
         });
+    }
+
+    class ReplyButtonJsonHttpResponseHandler extends JsonHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Headers headers, JSON json) {
+            Log.i(TAG, "success publishing tweet");
+            try {
+                Tweet tweet = Tweet.fromJson(json.jsonObject);
+                Log.i(TAG, "Published tweet says: " + tweet.getBody());
+
+                // Return information to timeline
+                Intent returnToTimelineIntent = new Intent();
+                returnToTimelineIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                setResult(RESULT_OK, returnToTimelineIntent);
+                finish();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+            Log.e(TAG, "FAILURE: " + response, throwable);
+        }
     }
 }

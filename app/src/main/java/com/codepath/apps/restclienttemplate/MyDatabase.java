@@ -11,7 +11,6 @@ import com.codepath.apps.restclienttemplate.models.User;
 public abstract class MyDatabase extends RoomDatabase {
     public abstract TweetDao tweetDao();
 
-
     // Database name to be used
     public static final String NAME = "MyDataBase";
 }

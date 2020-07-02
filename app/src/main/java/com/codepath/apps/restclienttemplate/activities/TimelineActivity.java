@@ -4,14 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -64,14 +61,14 @@ public class TimelineActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getString(R.string.timeline_label));
 
+        // This layout allows swipe to refresh
         mSwipeTimelineLayout = timelineBinding.layoutRvTimeline;
         configureSwipeTimelineLayout(mSwipeTimelineLayout);
 
-
+        // Configure Recycler to hold the timeline and use infinite scroll
         mTwitterRecycler = timelineBinding.rvTimeline;
         mTweets = new ArrayList<>();
         mTwitterAdapter = new TwitterAdapter(this, mClient, mTweets);
-
         mTwitterRecycler.setAdapter(mTwitterAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mTwitterRecycler.setLayoutManager(linearLayoutManager);
@@ -84,7 +81,8 @@ public class TimelineActivity extends AppCompatActivity {
         };
         mTwitterRecycler.addOnScrollListener(scrollListener);
 
-        // Query for existing tweets in the DB
+        // Query for existing tweets in the Data Base
+        // These tweets will be overwritten if our request to the Twitter API is successful
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -109,12 +107,12 @@ public class TimelineActivity extends AppCompatActivity {
                     final List<Tweet> tweetsFromNetwork = Tweet.fromJsonArray(jsonArray);
                     mTwitterAdapter.addAll(tweetsFromNetwork);
 
-                    // Add this newly found data to the DB
+                    // Add the newly found data to the Data Base
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
                             Log.i(TAG, "Saving data into the DB");
-                            // Insert Users first, because of foreign keys
+                            // Insert Users first because of foreign key references in the Tweets
                             List<User> usersFromNetwork = User.fromJsonTweetArray(tweetsFromNetwork);
                             mTweetDao.insertModel(usersFromNetwork.toArray(new User[0]));
                             mTweetDao.insertModel(tweetsFromNetwork.toArray(new Tweet[0]));
@@ -131,6 +129,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "FAILURE: " + response, throwable);
+                // Refresh is done now, so remove the loading icon
                 mSwipeTimelineLayout.setRefreshing(false);
             }
         });
@@ -185,7 +184,7 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ComposeActivity.COMPOSE_REQUEST_CODE || requestCode == ReplyActivity.REPLY_REQUEST_CODE)
                 && resultCode == RESULT_OK) {
-            // Get data from published tweet and update the timleine
+            // Get data from published tweet and update the timeline
             Tweet tweet = Parcels.unwrap(data.getParcelableExtra(Tweet.class.getSimpleName()));
             mTweets.add(0, tweet);
             mTwitterAdapter.notifyItemInserted(0);

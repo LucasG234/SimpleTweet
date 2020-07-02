@@ -15,13 +15,13 @@ import java.util.List;
 @Entity
 public class User {
 
-    // Keys from Twitter response JSON
+    // Keys in the Twitter response JSON
     private static final String ID_KEY = "id";
     private static final String NAME_KEY = "name";
     private static final String SCREEN_NAME_KEY = "screen_name";
     private static final String IMAGE_URL_KEY = "profile_image_url_https";
 
-    // Non-private members and empty constructor for Parceler
+    // All members are non-private for Parceler
     @ColumnInfo
     @PrimaryKey
     long id;
@@ -32,7 +32,7 @@ public class User {
     @ColumnInfo
     String imageUrl;
 
-
+    // Empty constructor needed for Parceler
     public User() {}
 
     private User(JSONObject jsonObject) throws JSONException {
@@ -46,6 +46,7 @@ public class User {
         return new User(jsonObject);
     }
 
+    // Extract the User references from a List of Tweets
     public static List<User> fromJsonTweetArray(List<Tweet> tweets) {
         List<User> users = new ArrayList<>();
 

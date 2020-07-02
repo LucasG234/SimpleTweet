@@ -2,13 +2,11 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -92,6 +90,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
                     .transform(new CircleCrop())
                     .into(tweetBinding.ivProfileImage);
 
+            // Helper methods for more complicated component configuration
             setTweetMedia(tweetBinding.ivTweetMedia, tweet);
             configureButtons(tweetBinding, tweet);
         }
@@ -123,6 +122,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             if(tweet.isRetweeted()) {
                 ImageViewCompat.setImageTintList(retweetButton, ColorStateList.valueOf(ContextCompat.getColor(mParentView, R.color.medium_green)));
             }
+
             // Set onClickListeners for all 3 buttons
             replyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -135,7 +135,6 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
                     mParentView.startActivityForResult(replyIntent, ReplyActivity.REPLY_REQUEST_CODE);
                 }
             });
-
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -143,7 +142,6 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
 
                 }
             });
-
             retweetButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

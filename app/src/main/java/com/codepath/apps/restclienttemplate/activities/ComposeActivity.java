@@ -34,7 +34,6 @@ public class ComposeActivity extends AppCompatActivity {
     private TwitterClient mClient;
 
     private EditText mComposeText;
-    private Button mComposeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +48,11 @@ public class ComposeActivity extends AppCompatActivity {
 
         TextInputLayout mComposeTextLayout = composeBinding.layoutEtCompose;
         mComposeText = composeBinding.etCompose;
-        mComposeButton = composeBinding.btnCompose;
+        Button mComposeButton = composeBinding.btnCompose;
 
         mComposeTextLayout.setCounterMaxLength(MAX_TWEET_LENGTH);
 
-
-        // Set click listener on the compose button to make an API call to twitter
+        // Set click listener on the reply button to make an API call to twitter
         mComposeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,31 +64,33 @@ public class ComposeActivity extends AppCompatActivity {
                     Toast.makeText(ComposeActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    mClient.publishTweet(tweetText, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Headers headers, JSON json) {
-                            Log.i(TAG, "success publishing tweet");
-                            try {
-                                Tweet tweet = Tweet.fromJson(json.jsonObject);
-                                Log.i(TAG, "Published tweet says: " + tweet.getBody());
-
-                                // Return information to timeline
-                                Intent returnToTimelineIntent = new Intent();
-                                returnToTimelineIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-                                setResult(RESULT_OK, returnToTimelineIntent);
-                                finish();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                            Log.e(TAG, "FAILURE: " + response, throwable);
-                        }
-                    });
+                    mClient.publishTweet(tweetText, new ComposeButtonJsonResponseHandler());
                 }
             }
         });
+    }
+
+    class ComposeButtonJsonResponseHandler extends JsonHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Headers headers, JSON json) {
+            Log.i(TAG, "success publishing tweet");
+            try {
+                Tweet tweet = Tweet.fromJson(json.jsonObject);
+                Log.i(TAG, "Published tweet says: " + tweet.getBody());
+
+                // Return information to timeline
+                Intent returnToTimelineIntent = new Intent();
+                returnToTimelineIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                setResult(RESULT_OK, returnToTimelineIntent);
+                finish();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+            Log.e(TAG, "FAILURE: " + response, throwable);
+        }
     }
 }

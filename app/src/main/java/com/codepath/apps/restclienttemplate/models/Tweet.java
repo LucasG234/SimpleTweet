@@ -20,7 +20,7 @@ import java.util.List;
 @Entity(foreignKeys = @ForeignKey(entity=User.class, parentColumns="id", childColumns="userId"))
 public class Tweet {
 
-    // Keys from Twitter response JSON
+    // Keys in the Twitter response JSON
     private static final String BODY_KEY = "text";
     private static final String CREATED_AT_KEY = "created_at";
     private static final String ID_KEY = "id";
@@ -33,7 +33,7 @@ public class Tweet {
 
     private static final String TAG = "Tweet";
 
-    // Non-private members and empty constructor for Parceler
+    // All members are non-private for Parceler
     @ColumnInfo
     @PrimaryKey
     long id;
@@ -52,6 +52,7 @@ public class Tweet {
     @Ignore
     User user;
 
+    // Empty constructor needed for Parceler
     public Tweet() {}
 
     private Tweet(JSONObject jsonObject) throws JSONException {
@@ -68,7 +69,7 @@ public class Tweet {
 
         this.mediaDisplayUrl = null;
         JSONObject entities = jsonObject.getJSONObject(ENTITIES_OBJECT_KEY);
-        // If the object has the media array and its not null, store it to be rendered
+        // If the object has the media array and its not null, store the media url to be rendered
         if(entities.has("media")) {
             JSONArray mediaArray = entities.getJSONArray(MEDIA_ARRAY_KEY);
             mediaDisplayUrl = mediaArray.getJSONObject(0).getString(MEDIA_DISPLAY_URL_KEY);
