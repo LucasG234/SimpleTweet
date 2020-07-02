@@ -10,14 +10,14 @@ public class TweetWithUser {
     @Embedded
     User user;
 
-    @Embedded(prefix="tweet_")
+    @Embedded(prefix = "tweet_")
     Tweet tweet;
 
 
     public static List<Tweet> getTweetList(List<TweetWithUser> list) {
         List<Tweet> tweets = new ArrayList<>();
         // Take each TweetWithUser object from the list and return the Tweet objects contained within them with the User reference fixed
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             Tweet tweet = list.get(i).tweet;
             tweet.setUser(list.get(i).user);
             tweets.add(tweet);

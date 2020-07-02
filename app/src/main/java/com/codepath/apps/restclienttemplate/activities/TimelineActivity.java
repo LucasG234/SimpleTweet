@@ -137,7 +137,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void loadMoreData() {
         // Give getNextPageofTweets the ID of the oldest tweet
-        mClient.getNextPageOfTweets(mTweets.get(mTweets.size()-1).getId(),
+        mClient.getNextPageOfTweets(mTweets.get(mTweets.size() - 1).getId(),
                 new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {

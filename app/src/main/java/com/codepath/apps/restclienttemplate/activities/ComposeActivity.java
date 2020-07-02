@@ -1,8 +1,5 @@
 package com.codepath.apps.restclienttemplate.activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
@@ -57,13 +57,11 @@ public class ComposeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String tweetText = mComposeText.getText().toString();
-                if(tweetText.length() == 0) {
+                if (tweetText.length() == 0) {
                     Toast.makeText(ComposeActivity.this, getString(R.string.compose_error_empty), Toast.LENGTH_SHORT).show();
-                }
-                else if(tweetText.length() > MAX_TWEET_LENGTH) {
+                } else if (tweetText.length() > MAX_TWEET_LENGTH) {
                     Toast.makeText(ComposeActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     mClient.publishTweet(tweetText, new ComposeButtonJsonResponseHandler());
                 }
             }

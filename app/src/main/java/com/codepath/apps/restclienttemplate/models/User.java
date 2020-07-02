@@ -33,7 +33,8 @@ public class User {
     String imageUrl;
 
     // Empty constructor needed for Parceler
-    public User() {}
+    public User() {
+    }
 
     private User(JSONObject jsonObject) throws JSONException {
         this.id = jsonObject.getLong(ID_KEY);
@@ -50,7 +51,7 @@ public class User {
     public static List<User> fromJsonTweetArray(List<Tweet> tweets) {
         List<User> users = new ArrayList<>();
 
-        for(int i = 0; i < tweets.size(); i++) {
+        for (int i = 0; i < tweets.size(); i++) {
             users.add(tweets.get(i).getUser());
         }
 

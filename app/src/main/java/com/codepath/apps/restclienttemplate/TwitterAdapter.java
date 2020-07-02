@@ -96,13 +96,12 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         }
 
         private void setTweetMedia(ImageView tweetMedia, Tweet tweet) {
-            if(tweet.getMediaDisplayUrl() != null) {
+            if (tweet.getMediaDisplayUrl() != null) {
                 tweetMedia.setVisibility(View.VISIBLE);
                 Glide.with(mParentView)
                         .load(tweet.getMediaDisplayUrl())
                         .into(tweetMedia);
-            }
-            else {
+            } else {
                 tweetMedia.setVisibility(View.GONE);
             }
         }
@@ -113,13 +112,13 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
             final ImageView retweetButton = tweetBinding.ivRetweet;
 
             // Change look of like and retweet buttons initially if the tweet is already either
-            if(tweet.isLiked()) {
+            if (tweet.isLiked()) {
                 Glide.with(mParentView)
                         .load(R.drawable.ic_vector_heart)
                         .into(likeButton);
                 ImageViewCompat.setImageTintList(likeButton, ColorStateList.valueOf(ContextCompat.getColor(mParentView, R.color.medium_red)));
             }
-            if(tweet.isRetweeted()) {
+            if (tweet.isRetweeted()) {
                 ImageViewCompat.setImageTintList(retweetButton, ColorStateList.valueOf(ContextCompat.getColor(mParentView, R.color.medium_green)));
             }
 
@@ -151,7 +150,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         }
     }
 
-    class LikeButtonJsonResponseHandler extends JsonHttpResponseHandler{
+    class LikeButtonJsonResponseHandler extends JsonHttpResponseHandler {
         private Tweet mTweet;
         private ImageView mLikeButton;
 
@@ -181,7 +180,7 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         }
     }
 
-    class RetweetButtonJsonResponseHandler extends JsonHttpResponseHandler{
+    class RetweetButtonJsonResponseHandler extends JsonHttpResponseHandler {
         private Tweet mTweet;
         private ImageView mRetweetButton;
 

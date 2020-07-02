@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Parcel
-@Entity(foreignKeys = @ForeignKey(entity=User.class, parentColumns="id", childColumns="userId"))
+@Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId"))
 public class Tweet {
 
     // Keys in the Twitter response JSON
@@ -53,7 +53,8 @@ public class Tweet {
     User user;
 
     // Empty constructor needed for Parceler
-    public Tweet() {}
+    public Tweet() {
+    }
 
     private Tweet(JSONObject jsonObject) throws JSONException {
         this.liked = false;
@@ -70,7 +71,7 @@ public class Tweet {
         this.mediaDisplayUrl = null;
         JSONObject entities = jsonObject.getJSONObject(ENTITIES_OBJECT_KEY);
         // If the object has the media array and its not null, store the media url to be rendered
-        if(entities.has("media")) {
+        if (entities.has("media")) {
             JSONArray mediaArray = entities.getJSONArray(MEDIA_ARRAY_KEY);
             mediaDisplayUrl = mediaArray.getJSONObject(0).getString(MEDIA_DISPLAY_URL_KEY);
             Log.i(TAG, "successfully collected media URL: " + mediaDisplayUrl);
@@ -81,7 +82,7 @@ public class Tweet {
         return new Tweet(jsonObject);
     }
 
-    public static List<Tweet> fromJsonArray(JSONArray jsonArray) throws JSONException{
+    public static List<Tweet> fromJsonArray(JSONArray jsonArray) throws JSONException {
         List<Tweet> tweets = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             tweets.add(fromJson(jsonArray.getJSONObject(i)));

@@ -64,13 +64,11 @@ public class ReplyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String tweetText = mComposeText.getText().toString();
-                if(tweetText.length() == 0) {
+                if (tweetText.length() == 0) {
                     Toast.makeText(ReplyActivity.this, getString(R.string.compose_error_empty), Toast.LENGTH_SHORT).show();
-                }
-                else if(tweetText.length() > MAX_TWEET_LENGTH) {
+                } else if (tweetText.length() > MAX_TWEET_LENGTH) {
                     Toast.makeText(ReplyActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     mClient.publishReply(tweetText, replyId, new ReplyButtonJsonHttpResponseHandler());
                 }
             }
