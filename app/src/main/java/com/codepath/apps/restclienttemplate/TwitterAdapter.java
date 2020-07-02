@@ -104,7 +104,6 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
         }
 
         private void configureButtons(ItemTweetBinding tweetBinding, final Tweet tweet) {
-            //TODO= change names
             final ImageView likeButton = tweetBinding.ivLike;
             final ImageView replyButton = tweetBinding.ivReply;
             final ImageView retweetButton = tweetBinding.ivRetweet;

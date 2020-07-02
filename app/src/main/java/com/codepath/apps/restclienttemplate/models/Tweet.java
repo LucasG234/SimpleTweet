@@ -2,6 +2,12 @@ package com.codepath.apps.restclienttemplate.models;
 
 import android.util.Log;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Parcel
+@Entity(foreignKeys = @ForeignKey(entity=User.class, parentColumns="id", childColumns="userId"))
 public class Tweet {
 
     // Keys from Twitter response JSON
@@ -25,13 +32,22 @@ public class Tweet {
     private static final String TAG = "Tweet";
 
     // Non-private members and empty constructor for Parceler
-    String body;
-    String createdAt;
+    @ColumnInfo
+    @PrimaryKey
     long id;
+    @ColumnInfo
+    String body;
+    @ColumnInfo
+    String createdAt;
+    @ColumnInfo
     boolean liked;
+    @ColumnInfo
     boolean retweeted;
-    //TODO: display multiple images
+    @ColumnInfo
     String mediaDisplayUrl;
+    @ColumnInfo
+    long userId;
+    @Ignore
     User user;
 
     public Tweet() {}
@@ -44,6 +60,7 @@ public class Tweet {
         this.createdAt = jsonObject.getString(CREATED_AT_KEY);
         this.id = jsonObject.getLong(ID_KEY);
         this.user = User.fromJson(jsonObject.getJSONObject(USER_KEY));
+        this.userId = user.getId();
 
         this.mediaDisplayUrl = null;
         JSONObject entities = jsonObject.getJSONObject(ENTITIES_OBJECT_KEY);
@@ -77,6 +94,10 @@ public class Tweet {
 
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getMediaDisplayUrl() {
