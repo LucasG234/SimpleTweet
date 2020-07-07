@@ -194,9 +194,9 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
 
-    private void configureSwipeTimelineLayout(SwipeRefreshLayout mSwipeTimelineLayout) {
+    private void configureSwipeTimelineLayout(SwipeRefreshLayout swipeTimelineLayout) {
         // Add the listener
-        mSwipeTimelineLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeTimelineLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "fetching new data");
@@ -205,7 +205,7 @@ public class TimelineActivity extends AppCompatActivity {
         });
 
         // Configure the refreshing colors
-        mSwipeTimelineLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        swipeTimelineLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);

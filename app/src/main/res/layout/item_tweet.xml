@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="@dimen/small_inner_margin">
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/profile_horizontal"
+        android:layout_height="@dimen/profile_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -18,7 +18,7 @@
         android:id="@+id/tvTweetName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="@dimen/small_inner_margin"
         tools:text="Lucas Gates"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
@@ -28,7 +28,7 @@
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="@dimen/small_inner_margin"
         android:textColor="@color/medium_gray"
         app:layout_constraintStart_toEndOf="@+id/tvTweetName"
         app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +38,7 @@
         android:id="@+id/tvTweetBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="@dimen/small_inner_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
         app:layout_constraintTop_toBottomOf="@+id/tvScreenName"
@@ -48,7 +48,7 @@
         android:id="@+id/ivTweetMedia"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="@dimen/small_inner_margin"
         android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:tint="@color/light_gray"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="@dimen/small_inner_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
@@ -90,8 +90,8 @@
 
     <View
         android:id="@+id/tweetDivider"
-        android:layout_width="400dp"
-        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
         android:background="?android:attr/listDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivRetweet" />

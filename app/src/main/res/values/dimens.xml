@@ -4,4 +4,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="small_inner_margin">5dp</dimen>
+    <dimen name="large_inner_margin">20dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="profile_vertical">50dp</dimen>
+    <dimen name="profile_horizontal">50dp</dimen>
+
 </resources>
