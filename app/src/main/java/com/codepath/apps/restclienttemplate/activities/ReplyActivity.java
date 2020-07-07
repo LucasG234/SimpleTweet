@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TweetButtonJsonHttpResponseHandler;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.databinding.ActivityReplyBinding;
@@ -27,7 +28,6 @@ import okhttp3.Headers;
 
 public class ReplyActivity extends AppCompatActivity {
 
-    public static final int MAX_TWEET_LENGTH = 280;
     public static final int REPLY_REQUEST_CODE = 68;
 
     private static final String TAG = "ComposeActivity";
@@ -52,7 +52,7 @@ public class ReplyActivity extends AppCompatActivity {
         Button mComposeButton = replyBinding.btnCompose;
         TextView mReplyName = replyBinding.tvReplyName;
 
-        mComposeTextLayout.setCounterMaxLength(MAX_TWEET_LENGTH);
+        mComposeTextLayout.setCounterMaxLength(Tweet.MAX_TWEET_LENGTH);
 
         Tweet parentTweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
         final Long replyId = parentTweet.getId();
@@ -66,36 +66,12 @@ public class ReplyActivity extends AppCompatActivity {
                 String tweetText = mComposeText.getText().toString();
                 if (tweetText.length() == 0) {
                     Toast.makeText(ReplyActivity.this, getString(R.string.compose_error_empty), Toast.LENGTH_SHORT).show();
-                } else if (tweetText.length() > MAX_TWEET_LENGTH) {
+                } else if (tweetText.length() > Tweet.MAX_TWEET_LENGTH) {
                     Toast.makeText(ReplyActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
                 } else {
-                    mClient.publishReply(tweetText, replyId, new ReplyButtonJsonHttpResponseHandler());
+                    mClient.publishReply(tweetText, replyId, new TweetButtonJsonHttpResponseHandler(ReplyActivity.this));
                 }
             }
         });
-    }
-
-    class ReplyButtonJsonHttpResponseHandler extends JsonHttpResponseHandler {
-        @Override
-        public void onSuccess(int statusCode, Headers headers, JSON json) {
-            Log.i(TAG, "success publishing tweet");
-            try {
-                Tweet tweet = Tweet.fromJson(json.jsonObject);
-                Log.i(TAG, "Published tweet says: " + tweet.getBody());
-
-                // Return information to timeline
-                Intent returnToTimelineIntent = new Intent();
-                returnToTimelineIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-                setResult(RESULT_OK, returnToTimelineIntent);
-                finish();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-            Log.e(TAG, "FAILURE: " + response, throwable);
-        }
     }
 }

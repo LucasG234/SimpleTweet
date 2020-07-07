@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TweetButtonJsonHttpResponseHandler;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
@@ -26,7 +27,6 @@ import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
 
-    public static final int MAX_TWEET_LENGTH = 280;
     public static final int COMPOSE_REQUEST_CODE = 67;
 
     private static final String TAG = "ComposeActivity";
@@ -50,7 +50,7 @@ public class ComposeActivity extends AppCompatActivity {
         mComposeText = composeBinding.etCompose;
         Button mComposeButton = composeBinding.btnCompose;
 
-        mComposeTextLayout.setCounterMaxLength(MAX_TWEET_LENGTH);
+        mComposeTextLayout.setCounterMaxLength(Tweet.MAX_TWEET_LENGTH);
 
         // Set click listener on the reply button to make an API call to twitter
         mComposeButton.setOnClickListener(new View.OnClickListener() {
@@ -59,36 +59,12 @@ public class ComposeActivity extends AppCompatActivity {
                 String tweetText = mComposeText.getText().toString();
                 if (tweetText.length() == 0) {
                     Toast.makeText(ComposeActivity.this, getString(R.string.compose_error_empty), Toast.LENGTH_SHORT).show();
-                } else if (tweetText.length() > MAX_TWEET_LENGTH) {
+                } else if (tweetText.length() > Tweet.MAX_TWEET_LENGTH) {
                     Toast.makeText(ComposeActivity.this, getString(R.string.compose_error_long), Toast.LENGTH_SHORT).show();
                 } else {
-                    mClient.publishTweet(tweetText, new ComposeButtonJsonResponseHandler());
+                    mClient.publishTweet(tweetText, new TweetButtonJsonHttpResponseHandler(ComposeActivity.this));
                 }
             }
         });
-    }
-
-    class ComposeButtonJsonResponseHandler extends JsonHttpResponseHandler {
-        @Override
-        public void onSuccess(int statusCode, Headers headers, JSON json) {
-            Log.i(TAG, "success publishing tweet");
-            try {
-                Tweet tweet = Tweet.fromJson(json.jsonObject);
-                Log.i(TAG, "Published tweet says: " + tweet.getBody());
-
-                // Return information to timeline
-                Intent returnToTimelineIntent = new Intent();
-                returnToTimelineIntent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-                setResult(RESULT_OK, returnToTimelineIntent);
-                finish();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-            Log.e(TAG, "FAILURE: " + response, throwable);
-        }
     }
 }

@@ -31,6 +31,8 @@ public class Tweet {
     private static final String LIKED_KEY = "favorited";
     private static final String RETWEETED_KEY = "retweeted";
 
+    public static final int MAX_TWEET_LENGTH = 280;
+
     private static final String TAG = "Tweet";
 
     // All members are non-private for Parceler
