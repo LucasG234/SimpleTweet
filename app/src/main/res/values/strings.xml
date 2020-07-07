@@ -18,8 +18,8 @@
 
     <string name="reply_name">Replying to @</string>
 
-    <string name="like_failure">Failed to like tweet.</string>
-    <string name="unlike_failure">Failed to unlike tweet.</string>
+    <string name="like_failure">Failed to [un]like tweet.</string>
     <string name="timeline_failure">Failed to load timeline.</string>
-
+    <string name="post_failure">Failed to post tweet.</string>
+    <string name="load_more_failure">Failed to load more tweets.</string>
 </resources>

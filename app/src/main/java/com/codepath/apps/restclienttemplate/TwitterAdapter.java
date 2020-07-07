@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -176,7 +177,8 @@ public class TwitterAdapter extends RecyclerView.Adapter<TwitterAdapter.TwitterV
 
         @Override
         public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-            Log.e(TAG, "failure to [un]like tweet: " + response, throwable);
+            Log.e(TAG, "http failure to [un]like tweet: " + response, throwable);
+            Toast.makeText(mParentView, mParentView.getString(R.string.like_failure), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -43,6 +44,7 @@ public class TweetButtonJsonHttpResponseHandler extends JsonHttpResponseHandler 
 
     @Override
     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-        Log.e(TAG, "FAILURE: " + response, throwable);
+        Log.e(TAG, "http failure on posting tweet: " + response, throwable);
+        Toast.makeText(mParent, mParent.getString(R.string.post_failure), Toast.LENGTH_SHORT).show();
     }
 }

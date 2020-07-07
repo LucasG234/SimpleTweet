@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
@@ -123,12 +124,14 @@ public class TimelineActivity extends AppCompatActivity {
                     mSwipeTimelineLayout.setRefreshing(false);
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception on population", e);
+                    Toast.makeText(TimelineActivity.this, getString(R.string.timeline_failure), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "FAILURE: " + response, throwable);
+                Log.e(TAG, "HTTP failure on population: " + response, throwable);
+                Toast.makeText(TimelineActivity.this, getString(R.string.timeline_failure), Toast.LENGTH_SHORT).show();
                 // Refresh is done now, so remove the loading icon
                 mSwipeTimelineLayout.setRefreshing(false);
             }
@@ -148,12 +151,14 @@ public class TimelineActivity extends AppCompatActivity {
                             mTwitterAdapter.addAll(Tweet.fromJsonArray(jsonArray));
                         } catch (JSONException e) {
                             Log.e(TAG, "Json exception on loadmoredata", e);
+                            Toast.makeText(TimelineActivity.this, getString(R.string.load_more_failure), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Log.e(TAG, "onFailure for loadMoreData: " + response, throwable);
+                        Log.e(TAG, "HTTP failure for loadMoreData: " + response, throwable);
+                        Toast.makeText(TimelineActivity.this, getString(R.string.load_more_failure), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
