@@ -8,16 +8,16 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".TwitterApp"
+        android:name=".networking.TwitterApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ReplyActivity" />
-        <activity android:name=".activities.ComposeActivity" />
-        <activity android:name=".activities.TimelineActivity" />
+        <activity android:name=".composition.ReplyActivity" />
+        <activity android:name=".composition.ComposeActivity" />
+        <activity android:name=".timeline.TimelineActivity" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".networking.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>

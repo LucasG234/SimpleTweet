@@ -1,8 +1,6 @@
-package com.codepath.apps.restclienttemplate.activities;
+package com.codepath.apps.restclienttemplate.composition;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,18 +10,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.TweetButtonJsonHttpResponseHandler;
-import com.codepath.apps.restclienttemplate.TwitterApp;
-import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.codepath.apps.restclienttemplate.networking.TwitterApp;
+import com.codepath.apps.restclienttemplate.networking.TwitterClient;
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.json.JSONException;
-import org.parceler.Parcels;
-
-import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
 
